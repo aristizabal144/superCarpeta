@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\User;
+use App\Documento;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -72,11 +74,19 @@ class RegisterController extends Controller
         $nombre_archivo = $file->getClientOriginalName();
         $nombre_final = Carbon::now()->toDateTimeString()."-".$nombre_archivo;
         $file->move(public_path().'/DOCUMENTS',$nombre_final);
-        return User::create([
+        $user = User::create([
             'cedula' => $data['cedula'],
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+        
+        $doc = new Documento();
+        $doc->usuario_id = $user->id;
+        $doc->documento_nombre = "Documento identidad";
+        $doc->documento_url = $nombre_final;
+        $doc->save();
+
+        return $user;
     }
 }

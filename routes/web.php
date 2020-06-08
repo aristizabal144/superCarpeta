@@ -21,6 +21,10 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Auth::routes();
+Route::get('/carpeta', 'CarpetaController@verCarpeta');
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/carpeta/{var}', 'CarpetaController@descargarDocumento');
+
+Route::get('/subir_documento', 'CarpetaController@verSubirDoc');
+
+Route::post('/subir_documento', 'CarpetaController@guardarDoc');
